@@ -53,3 +53,19 @@ DataSet Procedure(string s, Dictionary<string, object> dic)
             {
                 row.Cells[3].Value = "0";
             }
+//get values from listview web form
+foreach (ListViewItem item in lwDsSanPham.Items)
+            {
+                CheckBox cb = (CheckBox)item.FindControl("cbMua");
+                if (cb.Checked)
+                {
+                    TextBox sl = (TextBox)item.FindControl("tbSL");
+                    Label MAMH = (Label)item.FindControl("MAMHLabel");
+                    Dictionary<string, object> dic = new Dictionary<string, object>();
+                    dic.Add("USERID", user);
+                    dic.Add("MAMH", MAMH.Text);
+                    dic.Add("SL", Int32.Parse(sl.Text));
+
+                    db.Proce("THEM_GIOHANG", dic);
+                }
+            }
