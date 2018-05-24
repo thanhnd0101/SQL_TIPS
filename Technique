@@ -1,0 +1,55 @@
+// Call procedure from SQL SERVER
+DataSet Procedure(string s, Dictionary<string, object> dic)
+        {
+            SqlCommand cmd = new SqlCommand(s, cnn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            foreach (KeyValuePair<string, object> item in dic)
+            {
+                cmd.Parameters.Add(new SqlParameter("@" + item.Key, item.Value));
+            }
+            SqlDataAdapter da = new SqlDataAdapter();
+            da.SelectCommand = cmd;
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            return ds;
+        }
+        
+ //Load to list view
+ this.listView1.Columns.Add("TEN");
+ this.listView1.Columns.Add("SO LUONG");
+ this.listView1.Columns.Add("DON GIA");
+ 
+ foreach (DataRow dr in ds.Tables[0].Rows)
+            {
+                string[] row = { dr["TEN"].ToString(), dr["SL"].ToString(), dr["DONGIA"].ToString() };
+                ListViewItem item = new ListViewItem(row);
+                this.listView1.Items.Add(item);
+            }
+ 
+ 
+ //get value from datagridview
+ foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                try
+                {
+                    if (Int32.Parse(row.Cells[3].Value.ToString()) > 0)
+                    {
+                        Dictionary<string, object> dic = new Dictionary<string, object>();
+                        int sl = Int32.Parse(row.Cells[3].Value.ToString());
+                        dic.Add("MSMA", Int32.Parse(row.Cells[0].Value.ToString()));
+                        dic.Add("SL", sl);
+                        dic.Add("NOTABLE", soban);
+                        db.Procedure("THEM_GOIMON", dic);
+                    }
+                }
+                catch { }
+            }
+// add textbox to datagridview
+//Create New DataGridViewTextBoxColumn
+            DataGridViewTextBoxColumn textboxColumn = new DataGridViewTextBoxColumn();
+            //Add TextBoxColumn dynamically to DataGridView
+            dataGridView1.Columns.Add(textboxColumn);
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                row.Cells[3].Value = "0";
+            }
